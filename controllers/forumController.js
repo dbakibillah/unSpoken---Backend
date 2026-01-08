@@ -10,6 +10,7 @@ async function getAllForums(req, res) {
       .find()
       .sort({ createdAt: -1 })
       .toArray();
+    console.log(forums);
     res.json(forums);
   } catch (error) {
     res.status(500).json({ error: error.message });

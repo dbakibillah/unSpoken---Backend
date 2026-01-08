@@ -1,28 +1,30 @@
 const express = require("express");
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
 require("dotenv").config();
 const { connectToDatabase } = require("./db");
-const userRoutes=require('./routes/userRoutes'); 
+const userRoutes = require("./routes/userRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
 const forumRoutes = require("./routes/forumRoutes");
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
 const port = process.env.PORT || 5000;
 
-
+app.use(cors({ origin: ["http://localhost:5173"], credentials: true }));
 
 app.use("/users", userRoutes);
 app.use("/file", uploadRoutes);
 app.use("/forums", forumRoutes);
 
-
 // Start server after DB connection
 connectToDatabase()
-    .then(() => {
-        app.listen(port, () => {
-            console.log(`Server running on port ${port}`);
-        });
-    })
-    .catch((error) => {
-        console.error("Failed to start server:", error);
-        process.exit(1);
+  .then(() => {
+    app.listen(port, () => {
+      console.log(`Server running on port ${port}`);
     });
+  })
+  .catch((error) => {
+    console.error("Failed to start server:", error);
+    process.exit(1);
+  });
